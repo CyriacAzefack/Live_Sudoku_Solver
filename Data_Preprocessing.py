@@ -96,7 +96,8 @@ def recognize_number(x, y, sudoku_image):
 
 def process_image_file(filepath, training = True)  :
     img = cv2.imread(filepath)
-    process_image(img, filepath = filepath, training=training)
+    return process_image(img, filepath=filepath, training=training)
+
 
 def process_image(img, filepath=None, training = True, live = False) :
     '''
@@ -136,7 +137,7 @@ def process_image(img, filepath=None, training = True, live = False) :
 
     biggest = biggest.reshape((4, 2))
 
-    if live:
+    if live :
         img_contours = cv2.drawContours(img, [biggest], -1, (0, 255, 0), 3)
         return img_contours
 
@@ -166,6 +167,9 @@ def process_image(img, filepath=None, training = True, live = False) :
     warp = cv2.warpPerspective(img, retval,(SUDOKU_IMG_SIZE, SUDOKU_IMG_SIZE))
     warp_gray = cv2.cvtColor(warp, cv2.COLOR_BGR2GRAY)
 
+    if not training:
+        plt.imshow(warp_gray)
+        plt.show()
 
 
     #Segmenting the numbers
@@ -206,7 +210,9 @@ def process_image(img, filepath=None, training = True, live = False) :
                     if feat is not None:
                         sudoku_feat[i*9 + j] = feat
 
-    return features, labels, sudoku_feat, img_contours
+
+
+    return features, labels, sudoku_feat
                     
 
 if __name__ == "__main__" :
@@ -216,7 +222,6 @@ if __name__ == "__main__" :
     t_start = t.process_time()
     all_files = glob.glob('../images/*.jpg')
     for filename in all_files:
-        
         i = all_files.index(filename) + 1
         sys.stdout.write("\r%.2f %% of images treated!!" % (100 * i / len(all_files)))
         sys.stdout.flush()

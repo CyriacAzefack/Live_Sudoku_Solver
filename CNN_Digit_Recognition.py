@@ -127,13 +127,13 @@ def main():
     train_input_fn = tf.estimator.inputs.numpy_input_fn(
                     x={"x": train_features},
                     y=train_labels,
-                    batch_size=500,
+                    batch_size=100,
                     num_epochs=None,
                     shuffle=True)
 
     classifier_model.train(
             input_fn=train_input_fn,
-            max_steps=5000,
+            max_steps=2000,
             hooks=[logging_hook])
 
     # Evaluate the model and print results
